@@ -25,4 +25,5 @@ for i in range(1, n+k+1): # 전부 다 확인
         answer = max(answer, cnt+1)
     answer = max(answer, cnt)
 
+
 print(answer)
