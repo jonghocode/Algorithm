@@ -14,4 +14,5 @@ for i in range(5, n+1): # 5로 배달
         else : # 현재 값이 없으면 (전 값+1)
             dp[i] = dp[i-5] + 1
 
+
 print(dp[n])
