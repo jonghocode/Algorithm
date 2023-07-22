@@ -2,6 +2,7 @@ import sys
 
 n, d, k, c = map(int, input().split())  # 접시 수, 가짓 수,  연속, 쿠폰
 answer, cnt = 0, 0
+
 lst = [0] * 60010
 chk = [0] * 60010
 
