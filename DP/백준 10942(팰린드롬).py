@@ -3,7 +3,6 @@
 import sys
 n = int(input())
 lst = list(map(int, input().split()))
-print(lst)
 # 0,0 / 1,1 / 2,2/ 3,3/ 4,4/ 5,5
 # 0,1 / 1,2 / 2,3
 # 범위 안 넘어가게 체크
