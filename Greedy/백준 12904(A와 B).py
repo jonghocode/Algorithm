@@ -8,8 +8,7 @@ while len(s) != len(t):
         t = t[::-1]
         t = t[1:]
 
-for i in range(len(s)):
-    if s[i] != t[i]:
-        print(0)
-        break
-print(1)
+if s!=t:
+    print(0)
+else:
+    print(1)
