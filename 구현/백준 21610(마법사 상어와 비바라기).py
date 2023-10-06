@@ -38,30 +38,30 @@ for i in range(m):
 
     now = check(cloud) # 현재 구름 좌표
     water = []
+
     for x, y in now: # 구름 이동
         cloud[x][y] = 0
         # 범위 처리
-        for _ in range(s):
-            x, y = x + dirx[d], y + diry[d]
-            if x < 0:
-                x = n-1
-            if y < 0:
-                y = n-1
-            if x >= n:
-                x = 0
-            if y >= n:
-                y = 0
+        # for _ in range(s): # 이 부분도 원래는 %를 이용해서 하려고했었는데 답이 잘 나오지 않아서 이렇게 바꿨다
+        #     x, y = x + dirx[d], y + diry[d]
+        #     if x < 0:
+        #         x = n-1
+        #     if y < 0:
+        #         y = n-1
+        #     if x >= n:
+        #         x = 0
+        #     if y >= n:
+        #         y = 0
+        nx, ny = (x + dirx[d]*s)%n, (y + diry[d]*s)%n
+        # 7%3 == 1 / -7%3 == 2
 
-        cloud[x][y] = -1
-        board[x][y] += 1
-        water.append([x, y])
+
+        # cloud[tx][ty] = -1 
+        # 원래 이 자리에 있었는데 디버깅을 하다보니 -1로 바꿔버리면 위에서 다시 0으로 바뀔수도 있어서 밑에서 바꿔야 함
+        # 구현은 시키는대로 잘 하면 된다! 순서에 맞게
+        board[nx][ny] += 1
+        water.append([nx, ny])
         
-    print('cloud')
-    for i in range(n):
-        for j in range(n):
-            print(cloud[i][j], end=' ')
-        print()
-    print()
     for x, y in water: # 물복사 버그
         cnt = 0
         for k in range(4):
@@ -69,32 +69,16 @@ for i in range(m):
             if nx >= 0 and nx < n and ny >= 0 and ny < n and board[nx][ny] >= 1:
                 cnt += 1
         board[x][y] += cnt
+        cloud[x][y] = -1
     
     for r in range(n): # 구름 초기화
         for c in range(n):
             if board[r][c] >= 2 and cloud[r][c] != -1:
                 cloud[r][c] = 1
                 board[r][c] -= 2
-
-    for r in range(n): # 구름 초기화
-        for c in range(n):
             if cloud[r][c] == -1:
                 cloud[r][c] = 0
-                
 
-    print()
-    for i in range(n):
-        for j in range(n):
-            print(board[i][j], end=' ')
-        print()
-    print()
-
-    print('cloud')
-    for i in range(n):
-        for j in range(n):
-            print(cloud[i][j], end=' ')
-        print()
-    print()
 sum = 0
 for i in range(n):
     for j in range(n):
