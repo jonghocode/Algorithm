@@ -1,11 +1,25 @@
 from collections import deque
+def left(n,dir):
+	if n >= 0 and lst[n][2] != lst[n+1][6]:
+		left(n-1,-dir)
+		lst[n].rotate(dir)
 
-# q를 쓰는게 좋을 듯
-wheel = []
-for i in range(4):
-    wheel.append(list(input()))
+def right(n,dir):
+	if n <= 3 and lst[n][6] != lst[n-1][2]:
+		right(n+1,-dir)
+		lst[n].rotate(dir)
+
+lst = [deque(input()) for _ in range(4)]
 k = int(input())
-for i in range(k):
-    num, where = map(int, input().split())
+for _ in range(k):
+	num,dir = map(int,input().split())
+	num -= 1
+	left(num-1,-dir)
+	right(num+1,-dir)
+	lst[num].rotate(dir)
 
-print(wheel)
+ans = 0
+for i in range(4):
+	if lst[i][0] == '1':
+		ans += 2**i
+print(ans)
