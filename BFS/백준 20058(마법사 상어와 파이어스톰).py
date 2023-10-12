@@ -81,7 +81,7 @@ for i in range(n):
         sum += temp[i][j]
 print(sum)
 
-t = -1
+t = 0
 chk = [[0 for _ in range(n)] for _ in range(n)]
 for i in range(n):
     for j in range(n):
