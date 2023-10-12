@@ -22,23 +22,51 @@
 # 3 : 100*2 + 98 + 100 398
 # 4 : 100*3 + 98*2 + 99 x
 
+
 # len > 1 일 때 리스트에 있는 값이 다 똑같다면 무조건 idx가 1인곳이 답
 # 양쪽의 합이 제일 큰 idx
+
+# -1    2   5     100
+# -1000   
 import sys
 
 n = int(input())
 lst = [list(map(int, sys.stdin.readline().strip().split())) for _ in range(n)]
 
-answer, answeridx = -1, -1
+st = 0
+d = 0
+lst.sort()
+l = [0]*2000000010
+r = [0]*2000000010
+for i in range(n):
+    s, e = lst[i][0], lst[i][1]
+    l[s] = l[s-1]
+    d += lst[i][1]
+    l[s] += d*abs(lst[i][0] - st)
+    st = s
+
+st = n-1
+d = 0
+for i in range(n-1, -1, -1):
+    s, e = lst[i][0], lst[i][1]
+    r[s] = r[s+1]
+    d += lst[i][1]
+    r[s] += d*abs(lst[i][0] - st)
+    st = s
+
+answer = 0x7fffffff
 for i in range(n):
     if i == 0:
-        sum = lst[i+1][1]
+        if answer > r[i+1]:
+            answer = r[i+1]
+            idx = i
     elif i == n-1:
-        sum = lst[i-1][1]
+        if answer > l[i-1]:
+            answer = l[i-1]
+            idx = i
     else:
-        sum = lst[i-1][1] + lst[i+1][1]
-    if sum > answer:
-        answer = sum
-        answeridx = lst[i][0]
+        if answer > l[i-1] + r[i+1]:
+            answer = l[i-1] + r[i+1]
+            idx = i
 
-print(answeridx)
+print(idx)
