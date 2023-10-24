@@ -9,31 +9,39 @@ def solution(relation):
                 s = ''
                 for j in range(len(relation[0])):
                     if tempchk[j] == 1:
-                        s += relation[i][j]
+                        s += str(relation[i][j])
                 if s not in dict:
                     dict[s] = 1
                 else:
                     return
-
+            sw = 0
             for j in range(len(relation[0])):
-                if tempchk[j] == 1 and chk[j] == 0:
-                    chk[j] = 1
-
-            answer += 1         
+                if tempchk[j] == 1 and temp2chk[j] == 0:
+                    temp2chk[j] = 1
+                    sw += 1
+            # 0, (2,3), (1, 3, 4)
+            if sw == d:
+                answer += 1           
             return
         
         for i in range(len(relation[0])):
-            if tempchk[i] == 0:
+            if chk[i] == 0 and tempchk[i] == 0:
                 tempchk[i] = 1
                 back(n, d+1)
                 tempchk[i] = 0
     
     answer = 0
-    chk = [0]*len(relation)
+    chk = [0]*len(relation[0])
 
     for i in range(1, len(relation[0])+1):
-        tempchk = [0]*len(relation)
+        tempchk = [0]*(len(relation[0]))
+        temp2chk = [0]*(len(relation[0]))
         back(i, 0)
+        # print(temp2chk)
+        for j in range(len(relation[0])):
+            if temp2chk[j] == 1:
+                chk[j] = 1
+
     
     return answer
 
@@ -49,3 +57,5 @@ print(solution([["100","ryan","music","2"],
 ["400","con","computer","4"],
 ["500","muzi","music","3"],
 ["600","apeach","music","2"]]))
+
+print(solution([['a',1,'aaa','c','ng'],['b',1,'bbb','c','g'],['c',1,'aaa','d','ng'],['d',2,'bbb','d','ng']]))
