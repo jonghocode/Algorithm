@@ -5,6 +5,7 @@
 # 캐릭터가 생존할 수 있는지
 # 시전시간, 초당 회복량, 추가 회복량
 # 공격시간, 피해량
+
 def solution(bandage, health, attacks):
     answer = 0
     end = attacks[-1][0]
