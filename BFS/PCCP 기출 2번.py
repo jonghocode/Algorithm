@@ -1,5 +1,4 @@
 from collections import deque
-
 def solution(land):
     
     def bfs(cnt, i, j):
