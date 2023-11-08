@@ -23,6 +23,7 @@ while q:
     if x == ex and y == ey:
         answer = min(answer, d) # 나중에 들어온 값이 더 작을수도 있기 때문에
     
+
     if state < k: # 지금까지 이동한 횟수가 k보다 작다면 말처럼 이동
         for i in range(8):
             nx, ny = x + hx[i], y + hy[i]
