@@ -1,24 +1,29 @@
-# 이분 탐색(앞에서 부터 하나씩 고르면서 고른 것의 뒤에 것 중에서 0에 가장 가까운 값 찾기)
+# n <= 100,000 -> nlog(n) or 그리디 or 투포인터
+# 이 문제는 그리디(힙 사용 x)
+
+# 에라토스테네스의 체 처럼 문제 풀기(자신의 배수에 있는 것을 다 체크)
+# 처음에 이 방법을 생각했었는데 최악의 경우를 생각했을 때 당연히 안될것같아서
+# 다른 방법을 찾아보다가 풀이를 봤는데 이 방식의 시간복잡도가 nlog(n) 이라는 것을 알았다..
+
 n = int(input())
 lst = list(map(int, input().split()))
-answer = 0x7fffffff
+M = max(lst)
+chk = [0 for _ in range(M+1)]
 
-for i in range(n-1):
-    l, r, k = i+1, n-1, lst[i]*-1
-    while l <= r and l > i:
-        mid = (l + r) // 2
-        if lst[mid] < k:
-            l = mid + 1
-        elif lst[mid] > k:
-            r = mid - 1
-        else:
-            print(lst[i], lst[mid])
-            exit()
-        if lst[i] + lst[mid] < 0 and answer > (lst[i]+lst[mid])*-1:
-            lans, rans = lst[i], lst[mid]
-            answer = (lst[i]+lst[mid])*-1
-        elif lst[i] + lst[mid] > 0 and answer > lst[i] + lst[mid]:
-            lans, rans = lst[i], lst[mid]
-            answer = lst[i] + lst[mid]
+for i in lst:
+    chk[i] = 1
 
-print(lans, rans)
+answer = [0 for _ in range(M+1)]
+
+for i in lst:
+    cnt = 2
+    while True:
+        if i*cnt > M:
+            break
+        if chk[i*cnt] == 1:
+            answer[i] += 1
+            answer[i*cnt] -= 1
+        cnt += 1
+            
+for i in lst:
+    print(answer[i], end=' ')
