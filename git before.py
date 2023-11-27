@@ -1,26 +1,10 @@
-n, s = map(int, input().split())
-lst = list(map(int, input().split()))
-answer = 0
+클라이언트 키 : 8a2ff1aebc8f8febeb2c9a8a578f5c14
+redirect url : http://localhost:8090/kakao/login (
+카카오 로그인을 하고나서 로그인이 정상적으로 되었다면 이 주소로 정보를 전달 받음)
 
-dict = {}
+비밀번호는 디폴트 값이 들어가야 한다?
 
-def dfs(idx, end, sum, what):
-    global s, n, answer
-    if idx == end:
-        if what == 'L': # 왼쪽 부분이라면
-            if not sum in dict:
-                dict[sum] = 1
-            else:
-                dict[sum] += 1
-        elif s-sum in dict: # 오른쪽 부분이라면
-            answer += dict[s-sum]
-        return
-    dfs(idx+1, end, sum+lst[idx], what)
-    dfs(idx+1, end, sum, what)
-    
-dfs(0, n//2, 0, 'L')
-dfs(n//2, n, 0, 'R')
-if s == 0: # 아무것도 안 고르는 경우 있을 수 있기 때문
-    answer -= 1
+oauth2 client 라이브러리
 
-print(answer)
+https://www.youtube.com/watch?v=NwQ_55l0Za4
+>>>>>>> 68302fb1abfc1646064eb75987a15ff29b42b9dc
