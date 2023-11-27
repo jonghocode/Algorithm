@@ -1,3 +1,7 @@
+# 문제를 잘못 읽었다.
+# 첫 번째 집을 선택하고 난 후 다 구해준다. 그리고 마지막부분은 첫번째 집과 마지막 집 색깔이 달라야하기 때문에
+# dp[n-1][i] = 0x7fffffff 이렇게 최댓값을 넣어주고 답을 구했다.
+
 n = int(input())
 lst = [list(map(int, input().split())) for _ in range(n)]
 answer = 0x7fffffff
