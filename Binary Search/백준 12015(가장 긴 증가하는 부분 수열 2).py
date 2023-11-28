@@ -1,35 +1,36 @@
 # 자신의 앞에 있는 것 중에서 자신보다 작은 값 중 chk가 가장 큰 값 찾기
 # 10 20 10 30 20 50
-
 # 처음 정렬 후 인덱스 배정
 # 10 10 20 20 30 50 : temp
 # 0   2  1   4   3  5 : 입력받은 인덱스 배정
 # 1   1   2      3 : dp / 값 넣기
 # 처음엔 값이 작은것을 찾고 다음 부터는 인덱스가 안에 있는 값이 가장 큰 것을 찾으면 됨(현재 인덱스보다 작아야 함)
+# !!!!!!! 처음에 이렇게 풀려고하다가 오답이 났다. O(n^2) 방식에서 앞에 있는 수 중에 제일 큰 수를 찾는것을 이분탐색으로 찾으려했지만 정렬이 안되어있어서 실패하고
+# LIS를 이분탐색으로 구하는 방법을 봤다.
+# -------------------------------- 위에꺼는 틀림---------------------------------
+# LIS
+# 삽입 하는 방식(현재 값보다 dp배열 끝 값이 작으면 맨 뒤에 추가, 크다면 자신보다 작은값 중 제일 큰 값 앞의 수를 현재 수로 바꿈 
 
 
 n = int(input())
 lst = list(map(int, input().split()))
-temp = sorted([[lst[i], i] for i in range(n)])
-dp = [0]*n
+dp = []
 
 for i in range(n):
-    now, l, r = lst[i], 0, n
-    find = 0
-    while l <= r:
-        mid = (l + r) // 2
-        # print(l, r, i, mid, temp[mid][0], now)
-        # print(temp)
-        if temp[mid][0] < now:
-            if temp[mid][1] < i:
-                if find < dp[temp[mid][1]]:
-                    find = dp[temp[mid][1]]
-            l = mid + 1
+    now = lst[i]
+    if dp:
+        if dp[-1] < now: #현재 값보다 dp배열 끝 값이 작으면 맨 뒤에 추가
+            dp.append(now)
+        elif dp[-1] > now: #크다면 자신보다 작은값 중 제일 큰 값 앞의 수를 현재 수로 바꿈 
+            l, r = 0, len(dp) - 1
+            while l <= r:
+                mid = (l + r) // 2
+                if dp[mid] >= now:
+                    r = mid - 1
+                else:
+                    l = mid + 1
+            dp[l] = now # l에 넣는 것은 직접 구해봤다.
+    else:
+        dp.append(now)
 
-        else:
-            r = mid - 1
-
-    dp[i] = find+1
-    # print(dp)
-
-print(max(dp))
+print(len(dp))
