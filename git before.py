@@ -1,31 +1,37 @@
-# 행성 탐사
-# 누적합
-import sys
-
-n, m = map(int, input().split())
-k = int(input())
-board = [list(sys.stdin.readline().strip()) for _ in range(n)]
-search = [list(map(int, sys.stdin.readline().split())) for _ in range(k)]
-
-chk = [[[0 for _ in range(m+1)] for _ in range(n+1)] for _ in range(3)]
-
-for i in range(1, n+1):
-    for j in range(1, m+1):
-        now = board[i-1][j-1]
-        if now == 'J':
-            chk[0][i][j] += 1
-        elif now == 'O':
-            chk[1][i][j] += 1
-        elif now == 'I':
-            chk[2][i][j] += 1
-        chk[0][i][j] = chk[0][i-1][j] + chk[0][i][j-1] - chk[0][i-1][j-1] + chk[0][i][j]
-        chk[1][i][j] = chk[1][i-1][j] + chk[1][i][j-1] - chk[1][i-1][j-1] + chk[1][i][j]
-        chk[2][i][j] = chk[2][i-1][j] + chk[2][i][j-1] - chk[2][i-1][j-1] + chk[2][i][j]
-
-
-for i in range(k):
-    a, b, c, d = search[i][0], search[i][1], search[i][2], search[i][3]
-    print(chk[0][c][d] - chk[0][a-1][d] - chk[0][c][b-1] + chk[0][a-1][b-1], end=' ')
-    print(chk[1][c][d] - chk[1][a-1][d] - chk[1][c][b-1] + chk[1][a-1][b-1], end=' ')
-    print(chk[2][c][d] - chk[2][a-1][d] - chk[2][c][b-1] + chk[2][a-1][b-1])
+# 각 계란의 내구도는 상대의 무게만큼 깎임
+def go(d, sum, idx):
+    global answer
+    # print(f"answer : {answer}, d : {d}, sum : {sum}, idx : {idx}, lst : {lst}")
+    if d == n:
+        answer = max(answer, sum)
+        return
     
+    for i in range(idx, n): # 오른쪽에 있는 계란 잡기
+        if lst[i][0] > 0:
+            st, weight = lst[i][0], lst[i][1]
+            sw = 0
+            for j in range(n):
+                cnt = 0
+                if i != j and lst[j][0] > 0:
+                    st2, weight2 = lst[j][0], lst[j][1]
+                    lst[i][0] -= weight2
+                    lst[j][0] -= weight
+                    if lst[i][0] <= 0:
+                        cnt += 1
+                    if lst[j][0] <= 0:
+                        cnt += 1
+                    go(d+1, sum+cnt, i+1)
+                    lst[i][0] = st
+                    lst[j][0] = st2
+                    sw = 1
+            if sw == 0: # 고를 계란이 없다면 그냥 넘어가기
+                go(d+1, sum, i+1)
+        else: # 오른쪽에 있는 계란을 잡았는데 깨져있다면 넘어가기
+            go(d+1, sum, i+1)
+            
+n = int(input())
+lst = [list(map(int, input().split())) for _ in range(n)]
+chk = [0]*n
+answer = -1
+go(0, 0, 0)
+print(answer)
