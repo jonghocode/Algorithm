@@ -5,18 +5,18 @@ sys.setrecursionlimit(10**6)
 
 def dfs(x, y):
     global state
-    if x < 0 or x >= n or y < 0 or y >= m:
-        state = 2
+    if x < 0 or x >= n or y < 0 or y >= m: # 성공했다면
+        state = 2 # 값 바꾸기
         return
-    if visit[x][y] == 0:
+    if visit[x][y] == 0: # 이미 방문한 곳을 또 방문하면 실패
         state = 1
         return
-    if visit[x][y] != -1:
+    if visit[x][y] != -1: # 상태 바꾸고 return
         state = visit[x][y]
         return
 
-    visit[x][y] = 0
-    if board[x][y] == 'D':
+    visit[x][y] = 0 # 방문체크
+    if board[x][y] == 'D': # dfs 들어가기
         dfs(x+1, y)
     elif board[x][y] == 'U':
         dfs(x-1, y)
@@ -25,7 +25,7 @@ def dfs(x, y):
     elif board[x][y] == 'R':
         dfs(x, y+1)
 
-    visit[x][y] = state
+    visit[x][y] = state # return 되어서 오니까 state는 바뀌어있음 성공이든 실패든
 
 n, m = map(int, input().split())
 board = [list(input()) for _ in range(n)]
@@ -40,7 +40,7 @@ for i in range(n):
 answer = 0
 for i in range(n):
     for j in range(m):
-        if visit[i][j] == 2:
+        if visit[i][j] == 2: # 성공개수만 카운트
             answer += 1
 
 print(answer)
