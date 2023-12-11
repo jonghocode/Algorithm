@@ -1,32 +1,27 @@
 import sys
+from heapq import heappush, heappop
 
 n = int(input())
 lst = []
 
 for i in range(n):
-    lst.append(list(map(int, input().split())))
+    lst.append(list(map(int, sys.stdin.readline().split())))
 
 lst.sort()
-st, ed = lst[0][0], lst[0][1]
 
-answer = -1
-cnt = 1
+q = [[0, 0]]
+x, y, z = 0, 0, 0
+for s, e in lst:
+    if len(q) > 0 and q[0][0] <= s: # q의 끝나는 시간이 현재 시간보다 작거나 같다면
+        heappop(q)
+    heappush(q, [e, s])
 
-for i in range(1, n):
-    if st != lst[i][0]:
-        if ed >= lst[i][0]:
-            st = lst[i][0]
-            cnt += 1
-        else:
-            if cnt > answer:
-                a = st
-                b = ed
-                answer = cnt
-            
-            st = lst[i][0]
-            ed = lst[i][1]
-            cnt = 1
-    else:
-        ed = lst[i][1]
-        cnt += 1
-    print(st, ed, cnt)
+    if y == 0 or len(q) == z and y == s: # 끝나는 시간 바꿔주기
+        y = q[0][0]
+
+    if len(q) > z: # 답 변경
+        z = len(q)
+        x = s
+        y = q[0][0]
+
+print(f"{z}\n{x} {y}")
