@@ -1,60 +1,34 @@
-from heapq import heappush, heappop
-import sys
+# 옮긴 지역에 있는 대나무가 그 전보다 많아야함
+# 어떤 곳에 처음 풀어놓냐, 최대한 많은 칸 방문
+# 자신보다 작은것만 갈수있도록 하고 최댓값을 저장
+def dfs(x, y):
 
-n = int(input())
-promax = [] # 최대힙
-promin = [] # 최소힙
-sol = {}
-lst = {}
-for _ in range(n):
-    p, l = map(int, sys.stdin.readline().split())
-    heappush(promax, [-l, -p])
-    heappush(promin, [l, p])
-    lst[str(p)] = str(l)
+    if visit[x][y] != -1:
+        return visit[x][y]
 
-m = int(input())
-for _ in range(m):
-    command = list(sys.stdin.readline().strip().split())
-    if command[0] == 'add': # 더하기
-        lst[str(command[1])] = str(command[2])
-        heappush(promax, [-int(command[2]), -int(command[1])])
-        heappush(promin, [int(command[2]), int(command[1])])
+    visit[x][y] = 1
+    for i in range(4):
+        nx, ny = x + dirx[i], y + diry[i]
+        if nx < 0 or nx >= N or ny < 0 or ny >= N:
+            continue
+        if board[x][y] >= board[nx][ny]:
+            continue
+        visit[x][y] = max(dfs(nx, ny)+1, visit[x][y])
 
-    elif command[0] == 'recommend': # 추천하기
-        if command[1] == '1':
-            while True: # sol안에 없는 것을 뽑을 때 까지 뽑기
-                level, pro = -promax[0][0], -promax[0][1]
-                level = str(level)
-                pro = str(pro)
-                if pro in sol:
-                    if level in sol[pro]:
-                        heappop(promax)
-                    else:
-                        print(pro)
-                        break
-                else:
-                    print(pro)
-                    break
-        
-        
-        elif command[1] == '-1':
-            while True: # sol안에 없는 것을 뽑을 때 까지 뽑기
-                level, pro = promin[0][0], promin[0][1]
-                level = str(level)
-                pro = str(pro)
-                if pro in sol:
-                    if level in sol[pro]:
-                        heappop(promin)
-                    else:
-                        print(pro)
-                        break
-                else:
-                    print(pro)
-                    break
+    return visit[x][y]
 
-    elif command[0] == 'solved': # 풀었으면 sol에 넣기
-        if command[1] not in sol:
-            sol[command[1]] = []
-        sol[command[1]].append(lst[command[1]])
-        
-    # print(f"promin : {promin}, solved : {sol}")
+N = int(input())
+board = [list(map(int, input().split())) for _ in range(N)]
+visit = [[-1]*N for _ in range(N)]
+dirx, diry = [-1, 1, 0, 0], [0, 0, -1, 1]
+
+for i in range(N):
+    for j in range(N):
+        if visit[i][j] == -1:
+            dfs(i, j)
+
+answer = 0
+for i in range(N):
+    for j in range(N):
+        answer = max(answer, visit[i][j])
+print(answer)
