@@ -1,6 +1,8 @@
 # 옮긴 지역에 있는 대나무가 그 전보다 많아야함
 # 어떤 곳에 처음 풀어놓냐, 최대한 많은 칸 방문
 # 자신보다 작은것만 갈수있도록 하고 최댓값을 저장
+import sys
+sys.setrecursionlimit(10**5)
 def dfs(x, y):
 
     if visit[x][y] != -1:
