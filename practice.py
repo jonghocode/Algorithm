@@ -1,43 +1,63 @@
-# acm craft
-# 위상정렬(순서가 정해져있음)
+# 백준 2295(세수의 합)
 
-import sys
-from collections import deque
+더한 딕셔너리
+2, 3 = 5
+2, 5 = 7
+2, 10 = 12
+3, 5 = 8
+3, 10 = 13
+5, 10 = 15
 
-t = int(input())
-for _ in range(t):
-    n, k = map(int, input().split())
-    time = [0]+list(map(int, input().split()))
-    chk = [0 for _ in range(n+1)]
-    graph = {i : [] for i in range(1, n+1)}
-    dp = time[:] # dp 배열 초기화
+뺀 딕셔너리
+2, 3 = 1
+2, 5 = 3
+2, 10 = 8
+2, 18 = 16
+3, 5 = 2
+3, 10 = 7
+3, 18 = 15
+5, 10 = 5
+5, 18 = 13
+10, 18 = 8
 
-    for _ in range(k):
-        st, ed = map(int, sys.stdin.readline().split())
-        graph[st].append(ed)
-        chk[ed] += 1 # 받는 개수 체크
-    
-    last = int(input())
+현재 고른 더한 딕셔너리에서 고른 두 수를 제외하고 뺀 딕셔너리에서
+제일 큰 값(뒤 값이 큰 값 중 제일 큰 값)을 찾아야 함
 
-    q = deque()
+시간 복잡도 : nlog(n)
 
-    for i in range(1, n+1):
-        if chk[i] == 0: # 정점이 0 인것만 넣기
-            q.append(i)
-            chk[i] -= 1
-    
-    while q:
-        now = q.popleft()
-        if now == last:
-            print(dp[now])
-            break
 
-        for end in graph[now]:
-            if chk[end] > 0:
-                chk[end] -= 1
-                dp[end] = max(dp[end], dp[now] + time[end]) # 다음 건물이 지어지기 위해서는 전에 있던 건물들이 다 지어져야 지을 수 있기 때문에 최댓값으로 갱신
+# 백준 2295(세수의 합)
 
-        for i in range(1, n+1):
-            if chk[i] == 0:
-                q.append(i)
-                chk[i] -= 1
+n = int(input())
+lst = [int(input()) for _ in range(n)]
+lst.sort()
+add, minus = {}, {}
+
+for i in range(n-1): # 더하는 딕셔너리
+    for j in range(i+1, n-1):
+        temp = lst[i] + lst[j]
+        if temp not in add:
+            add[temp] = []
+            add[temp].append([i, j])
+        else:
+            add[temp].append([i, j])
+
+for i in range(n): # 빼는 딕셔너리
+    for j in range(i+1, n):
+        temp = lst[j] - lst[i]
+        if temp >= 0:
+            if temp not in minus:
+                minus[temp] = []
+                minus[temp].append([i, j])
+            else:
+                minus[temp].append([i, j])
+
+for key, value in add.items():
+    for t in value:
+        x, y = t[0], t[1]
+        
+        if key in minus:
+            l, r = 0, len(minus[key])    
+            
+            while l <= r:
+                mid = (l + r) // 2
