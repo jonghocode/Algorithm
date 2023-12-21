@@ -1,41 +1,34 @@
-# 남자와 여자의 차이보다 기억할 수 있는 값 보다 크면 남은 사람들 입장 x
+def dfs(now, color):
+    global sw
 
-# 차이가 작다면 계속 들여보내주고
-# 차이가 꽉 찼으면 뒤에사람
+    visit[now] = color
+    for go in graph[now]:
+        if visit[go] == -1:
+            next = 1 if color == 0 else 0
+            dfs(go, next)
+        elif visit[go] == color:
+            sw = 1
+            return
 
-n = int(input())
-s = list(input())
-man, woman, idx = 0, 0, 0
-chk = [0]*len(s)
-answer = 0
-while idx < len(s):
-    if s[idx] == 'W' and chk[idx] == 0: # 여자라면
-        if abs(woman+1 - man) <= n: # 바로 입장
-            chk[idx] = 1
-            woman += 1
-            answer += 1
-        else: # 바꿔도 안되면 종료
-            if idx+1 < len(s) and s[idx+1] != 'W':
-                chk[idx+1] = 1
-                idx -= 1
-                man += 1
-                answer += 1
-            else:
+t = int(input())
+for _ in range(t):
+    node, edge = map(int, input().split())
+    graph = {i : [] for i in range(1, node+1)}
+    visit = [-1 for _ in range(node+1)]
+
+    for _ in range(edge):
+        st, ed = map(int, input().split())
+        graph[st].append(ed)
+        graph[ed].append(st)
+    
+    sw = 0
+    for i in range(1, node+1):
+        if visit[i] == -1 and i in graph:
+            dfs(i, 0)
+            if sw == 1:
+                print("NO")
                 break
-    elif s[idx] == 'M' and chk[idx] == 0: # 남자라면
-        if abs(woman - (man+1)) <= n: # 바로 입장
-            chk[idx] = 1
-            man += 1
-            answer += 1
-        else:
-            if idx+1 < len(s) and s[idx+1] != 'M':
-                chk[idx+1] = 1
-                idx -= 1
-                woman += 1
-                answer += 1
-            else: # 바꿔도 안되면 종료
-                break
-
-    idx += 1
-
-print(answer)
+    
+    if sw == 0:
+        print("YES")
+    

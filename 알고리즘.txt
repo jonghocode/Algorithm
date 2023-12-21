@@ -46,3 +46,19 @@
 
 ! 백트래킹 + 그래프 탐색 : 백트래킹 함수의 매개변수에 idx를 주고 시간을 줄이고 백트래킹에서 조합을 만들었다면 그래프탐색으로
                            해당 노드들이 이어져있는지 확인하면 된다. 나는 bfs를 이용해서 확인했음
+
+! DFS(재귀)에서 return 값 받기 : 1. 탐색 중간에 false가 되어서 답을 false로 return 해야하면
+                                 
+                                 answer = dfs()
+                                 if not answer:
+                                     return False
+                                 return True
+
+                                 이렇게 answer가 재귀적인 수행이기 때문에 잘 생각해보면 밑에 if문을 준다면 계속적인 false를 return 할 수 있음
+
+                                 2. dfs로 방문한 개수를 다 가지고 return
+
+                                 c = 1
+                                 for ~
+                                    c += dfs() # 현재 위치에서 방문했던 것을 다 더함
+                                 return c # 다 더한 후 return 함
