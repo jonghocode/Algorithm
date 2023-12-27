@@ -1,25 +1,25 @@
-# 백준 13397(구간 나누기 2)
+from collections import deque
 
-n, m = map(int, input().split())
-lst = list(map(int, input().split()))
-l, r = 0, max(lst)
-answer = r
-while l <= r:
-    mid = (l + r) // 2
-    
-    cnt = 1
-    MIN, MAX = lst[0], lst[0]
-    for i in range(n):
-        MIN = min(MIN, lst[i])
-        MAX = max(MAX, lst[i])
-        if abs(MAX - MIN) > mid:
-            cnt += 1
-            MIN, MAX = lst[i], lst[i]
+m, n = map(int, input().split())
+board = [list(input()) for _ in range(n)]
+chk = [[0x7fffffff for _ in range(m)] for _ in range(n)]
+dirx, diry = [-1, 1, 0, 0], [0, 0, -1, 1]
 
-    if cnt <= m:
-        answer = min(answer, mid)
-        r = mid - 1 # 최솟값을 찾아야하기 때문
-    else:
-        l = mid + 1
-    
-print(answer)
+q = deque()
+q.append([0, 0])
+chk[0][0] = 0
+while q:
+    x, y = q.popleft()
+    for i in range(4):
+        nx, ny = x + dirx[i], y + diry[i]
+        if nx < 0 or nx >= n or ny < 0 or ny >= m:
+            continue
+        
+        if board[nx][ny] == '0' and chk[nx][ny] > chk[x][y]:
+            chk[nx][ny] = chk[x][y]
+            q.append([nx, ny])
+        elif board[nx][ny] == '1' and chk[nx][ny] > chk[x][y] + 1:
+            chk[nx][ny] = chk[x][y] + 1
+            q.append([nx, ny])
+
+print(chk[n-1][m-1])
