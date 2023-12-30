@@ -1,35 +1,20 @@
-# 2056(작업)
-from collections import deque
+우선순위 큐
+1927번 최소 힙(O)
+1715번 카드 정렬하기(O)
 
-n = int(input())
-graph = {i : [] for i in range(1, n+1)}
-chk, time, dp = [0]*(n+1), [0], [0]
-for i in range(1, n+1):
-    temp = list(map(int, input().split()))
-    num = temp[2:]
-    time.append(temp[0])
-    dp.append(temp[0])
-    for j in num:
-        graph[j].append(i)
-        chk[i] += 1
+최소비용신장트리
+1922번 네트워크 연결(프림)(O)
+1414번 불우이웃돕기(O)
 
-q = deque()
-for i in range(1, n+1):
-    if chk[i] == 0:
-        q.append([i, dp[i]])
-        chk[i] -= 1
 
-while q:
-    now, p = q.popleft()
+1747번 소수&팰린드롬(수학1)(O)
+1874번 스택수열(스택1)(O)
+14503번 로봇 청소기(시뮬레이션1)
+1202번 보석 도둑
+1655번 가운데를 말해요
+17472번 다리 만들기 2
 
-    for go in graph[now]:
-        if chk[go] >= 1:
-            chk[go] -= 1
-            dp[go] = max(dp[go], dp[now] + time[go])
-            
-    for i in range(1, n+1):
-        if chk[i] == 0:
-            q.append([i, dp[i]])
-            chk[i] -= 1
-
-print(max(dp))
+그래프 기초
+18352번 특정 거리의 도시 찾기
+1325번 효율적인 해킹(시간 줄이는 방법으로 다시 풀어보기)
+1707번 이분 그래프(O)
