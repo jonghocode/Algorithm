@@ -77,3 +77,24 @@
                     # 반복문을 가방을 기준으로 돌면서 가방의 무게가 현재 보석보다 더 커질 때 까지 보석을 최대힙에 넣음
                     # 그러면 힙에는 현재 가방 무게까지 구할 수 있는 보석 무게 중 최댓값이 저장되어있음
                     # 그래서 힙에서 하나씩 빼주면 답을 구할 수 있음(힙을 하나 더 사용을 했어야하는데 입력에 주어진 리스트 2개로 답을 구하려다보니 생각이 많아짐)
+
+! MST(최소 신장 트리) : 모든 node를 연결하는데 필요한 비용을 최소로 구하는 알고리즘
+                        프림 : 2차원 배열 이용(q 사용), 인접 리스트 이용(힙 사용)
+                        힙(
+                            visit = [0 for _ in range(n)]
+                            cost = [INF for _ in range(n)]
+                            cost[0] = 0
+                            q = []
+                            heappush(q, (0, 0))
+                            while q:
+                                T, now = heappop(q)
+                                if visit[now] == 0:
+                                    visit[now] = 1
+                                    for weight, idx in graph[now]:
+                                        if visit[idx] == 0 and cost[idx] > weight:
+                                            cost[idx] = weight
+                                            heappush(q, (weight, idx))
+                            answer = sum(cost)
+                        )
+
+                        큐에 넣을 때 튜플 사용해야함(리스트보다 6배 빠름)
