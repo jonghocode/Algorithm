@@ -1,61 +1,33 @@
-from collections import deque
+from heapq import *
+import sys
 
-n = int(input())
-board = [list(input()) for _ in range(n)]
-INF = 0x7fffffff
+def di(st, ed):
+    cost = [INF for _ in range(n+1)]; cost[st] = 0
 
-for i in range(n):
-    for j in range(n):
-        if 'a' <= board[i][j] <= 'z':
-            board[i][j] = ord(board[i][j]) - ord('a') + 1
-        elif 'A' <= board[i][j] <= 'Z':
-            board[i][j] = ord(board[i][j]) - ord('A') + 27
-        else:
-            board[i][j] = INF
+    q = []
+    heappush(q, (0, st))
+    while q:
+        d, now = heappop(q)
+        
+        if cost[now] < d:
+            continue
+        for e, w in graph[now]:
+            if cost[e] > cost[now] + w:
+                cost[e] = cost[now] + w
+                heappush(q, (cost[now] + w, e))
+        
+    return cost[ed]
 
-line = 0
-for i in range(n):
-    for j in range(n):
-        if board[i][j] != INF:
-            line += board[i][j]
+INF = 1e12
+n, e = map(int, input().split())
+graph = {i : [] for i in range(1, n+1)}
+for _ in range(e):
+    a, b, c = map(int, sys.stdin.readline().split())
+    graph[a].append([b, c])
+    graph[b].append([a, c])
 
-for i in range(n):
-    for j in range(n):
-        if i == j:
-            board[i][j] = INF
+node1, node2 = map(int, input().split())
+one = di(1, node1) + di(node1, node2) + di(node2, n)
+two = di(1, node2) + di(node2, node1) + di(node1, n)
 
-for i in range(n):
-    for j in range(n):
-        M = min(board[i][j], board[j][i])
-        board[i][j], board[j][i] = M, M
-
-
-visit = [0 for _ in range(n)]
-visit[0] = 1
-cost = board[0]
-q = deque()
-q.append([0, 0])
-
-while q:
-    now, sum = q.popleft()
-    M = INF
-
-    for i in range(n):
-        if visit[i] == 0 and cost[i] < M:
-            M = cost[i]
-            idx = i
-    
-    if M != INF:
-        q.append([idx, sum + M])
-        visit[idx] = 1
-
-        for i in range(n):
-            if visit[i] == 0 and cost[i] > board[idx][i]:
-                cost[i] = board[idx][i]
-
-
-for i in range(n):
-    if visit[i] == 0:
-        print(-1)
-        exit()
-print(line - sum)
+print(-1 if one >= INF and two >= INF else min(one, two))
