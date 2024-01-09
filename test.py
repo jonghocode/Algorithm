@@ -1,33 +1,54 @@
-from heapq import *
+# 5719 거의 최단 경로
 import sys
-
-def di(st, ed):
-    cost = [INF for _ in range(n+1)]; cost[st] = 0
-
-    q = []
-    heappush(q, (0, st))
-    while q:
-        d, now = heappop(q)
-        
-        if cost[now] < d:
-            continue
-        for e, w in graph[now]:
-            if cost[e] > cost[now] + w:
-                cost[e] = cost[now] + w
-                heappush(q, (cost[now] + w, e))
-        
-    return cost[ed]
-
+from heapq import *
+from collections import deque
 INF = 1e12
-n, e = map(int, input().split())
-graph = {i : [] for i in range(1, n+1)}
-for _ in range(e):
-    a, b, c = map(int, sys.stdin.readline().split())
-    graph[a].append([b, c])
-    graph[b].append([a, c])
 
-node1, node2 = map(int, input().split())
-one = di(1, node1) + di(node1, node2) + di(node2, n)
-two = di(1, node2) + di(node2, node1) + di(node1, n)
+def di(st, ed, graph):
+    cost = [INF for _ in range(n+1)]; cost[st] = 0
+    visit = [0 for _ in range(n+1)]; visit[st] = 1
+    q = deque([(st)])
 
-print(-1 if one >= INF and two >= INF else min(one, two))
+    while q:
+        now = q.popleft()
+
+        for i in range(n):
+            if visit[i] == 0 and cost[i] > cost[now] + graph[now][i]:
+                cost[i] = cost[now] + graph[now][i]
+        
+        MIN = INF
+        for i in range(n):
+            if visit[i] == 0 and cost[i] < MIN:
+                MIN = cost[i]
+                idx = i
+        
+        if MIN != INF:
+            visit[idx] = 1
+            q.append((idx))
+
+    return cost
+
+while True:
+    n, m = map(int, input().split())
+    if not n + m:
+        break
+    st, ed = map(int, input().split())
+    board = [[INF for _ in range(n+1)] for _ in range(n+1)]
+    for i in range(n):
+        board[i][i] = 0
+    for _ in range(m):
+        a, b, c = map(int, sys.stdin.readline().split())
+        board[a][b] = c
+    
+    temp = di(st, ed, board)
+    que = deque([(ed)])
+    while que:
+        now = que.popleft()
+
+        for i in range(n):
+            if temp[now] == board[i][now] + temp[i]:
+                board[i][now] = INF
+                que.append(i)
+    
+    lst = di(st, ed, board)
+    print(lst[ed] if lst[ed] != INF else -1)
