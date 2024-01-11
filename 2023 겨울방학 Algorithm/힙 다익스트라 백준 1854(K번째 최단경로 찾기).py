@@ -21,7 +21,7 @@ while q:
         if len(answer[e]) < k:
             heappush(answer[e], -(d+w))
             heappush(q, (d + w, e))
-        elif len(answer[e]) >= k and -answer[e][0] > d + w:
+        elif -answer[e][0] > d + w:
             heappop(answer[e])
             heappush(answer[e], -(d+w))
             heappush(q, (d + w, e))
