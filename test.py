@@ -27,18 +27,19 @@ for _ in range(m):
     graph[b].append(a)
 # print(graph)
 answer = []
-visit = [0 for _ in range(n+1)]
+visit = [0 for _ in range(n+1)]; visit[0] = 1
 for i in range(1, n+1):
     if visit[i] == 0:
         answer.append(bfs(i))
         # print(i, answer)
 
-answer.sort(key = lambda x : (-x[1], x[0]))
+dp = [0]*(k+1)
 result = 0
 candy = 0
-for person, cost in answer:
-    if result + person < k:
-        result += person
-        candy += cost
 
-print(candy)
+for v, w in answer:
+    for j in range(k-1, -1, -1):
+        if j < v: break
+        dp[j] = max(dp[j], dp[j-v]+w)
+
+print(dp[k-1])
