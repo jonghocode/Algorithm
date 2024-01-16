@@ -6,6 +6,9 @@ def find(idx):
 
 n, m = map(int, input().split())
 bad = list(map(int, input().split()))
+if bad[0] == 0:
+    print(m)
+    exit()
 bad = bad[1:]
 party = []
 for _ in range(m):
