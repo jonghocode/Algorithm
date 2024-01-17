@@ -1,37 +1,39 @@
-def find(idx):
-    if root[idx] == idx:
-        return root[idx]
-    root[idx] = find(root[idx])
-    return root[idx]
+def chk(v, mid, arr):
+    if len(arr) == 0: return False
+    for cmp in arr:
+        t = 0
+        for i in range(mid):
+            if word[v + i] != word[cmp + i]:
+                t = 1
+                break
+        if t == 0:
+            return True
+    return False
 
-n, m = map(int, input().split())
-bad = list(map(int, input().split()))
-if bad[0] == 0:
-    print(m)
-    exit()
-bad = bad[1:]
-party = []
-for _ in range(m):
-    temp = list(map(int, input().split()))
-    party.append(temp[1:])
-
-root = [i for i in range(n+1)]
-for i in range(len(bad)-1):
-    n1, n2 = find(bad[i]), find(bad[i+1])
-    if n1 != n2:
-        root[n2] = n1
-
-for lst in party:
-    for i in range(len(lst)-1):
-        n1, n2 = find(lst[i]), find(lst[i+1])
-        if n1 != n2:
-            root[n2] = n1
-
-answer = 0
-n1 = find(bad[0])
-for lst in party:
-    n2 = find(lst[0])
-    if n1 != n2:
-        answer += 1
-
-print(answer)
+X = 50001
+n = int(input())
+word = [0] + list(input())
+l, r = 1, n
+ans = 0
+while l <= r:
+    mid = (l + r) // 2
+    hash = [[] for _ in range(X)]
+    tmp, k, sw = 0, 1, 0
+    for i in range(1, n + 1):
+        if i < mid: k = (k * 31) % X
+        if i > mid: 
+            tmp = (ord(word[i - mid]) * k) % X
+            tmp = (tmp + X) % X
+        tmp = ((tmp*31) + ord(word[i])) % X
+        if i >= mid:
+            if chk(i - mid + 1, mid, hash[tmp]):
+                sw = 1
+                break
+            hash[tmp].append(i - mid + 1)
+    
+    if sw == 1:
+        l = mid + 1
+        ans = max(ans, mid)
+    else:
+        r = mid - 1
+print(ans)
