@@ -170,6 +170,13 @@
                 이런 구조이다.
 
                 두 번째인 query도 재귀로 구현하면 된다.
+                n이 주어졌을 때 트리의 범위는
+                t = 1; cnt = 0
+                while t <= n:
+                    t*=2
+                    cnt += 1
+                이렇게 한 후 1 << (cnt+1)이 트리의 범위이다
+                그리고 query를 할 때의 범위는 1~n이 아니라 1~t까지 해야한다. 
                 2. query
                 def query(l, r, st, ed, k):
                     if st <= l and r <= ed:
