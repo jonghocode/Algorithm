@@ -1,28 +1,27 @@
+# 11404번 플로이드(O)
 import sys
+input = sys.stdin.readline
 
 n = int(input())
 m = int(input())
 MAX = int(1e12)
-graph = [list(map(int, sys.stdin.readline().split())) for _ in range(m)]
-board = [[MAX for _ in range(n+1)] for _ in range(n+1)]
+MAP = [[MAX for _ in range(n+1)] for _ in range(n+1)]
 
 for i in range(1, n+1):
     for j in range(1, n+1):
         if i == j:
-            board[i][j] = 0
+            MAP[i][j] = 0
 
-for a, b, c in graph:
-    if board[a][b] > c:
-        board[a][b] = c
+for i in range(m):
+    a, b, c = map(int, input().split())
+    MAP[a][b] = min(MAP[a][b], c)
 
-for k in range(1, n+1):
+for k in range(1, n+1): # k를 경유해서 갈 때
     for i in range(1, n+1):
         for j in range(1, n+1):
-            if i == j: continue
-            if board[i][j] > board[i][k] + board[k][j]:
-                board[i][j] = board[i][k] + board[k][j]
+            MAP[i][j] = min(MAP[i][j], MAP[i][k] + MAP[k][j])
 
 for i in range(1, n+1):
     for j in range(1, n+1):
-        print(board[i][j], end=' ')
+        print(MAP[i][j] if MAP[i][j] != MAX else 0, end = ' ')
     print()
