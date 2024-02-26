@@ -31,7 +31,7 @@ while t <= n:
 
 tree = [0 for _ in range(1<<(cnt+1))]
 for i in range(1, n+1):
-    answer += query(1, t, dict[B[i]], t, 1)
-    update(1, t, 1, dict[B[i]])
+    answer += query(1, t, dict[B[i]], t, 1) # 쿼리 후
+    update(1, t, 1, dict[B[i]]) # update
 
 print(answer)
