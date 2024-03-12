@@ -21,8 +21,8 @@ while q:
         answer = min(answer, d)
     
     next = 1 if now == 0 else 0 # 다음 -> 지금이 낮이면 밤, 밤이면 낮
-    
-    if chk[next][cnt][x][y] > d: # 가만히 있는 경우
+
+    if chk[next][cnt][x][y] > d+1: # 가만히 있는 경우
             chk[next][cnt][x][y] = d+1
             q.append((next, cnt, x, y, d+1))
 
@@ -39,5 +39,7 @@ while q:
                 if chk[next][cnt+1][nx][ny] > d+1:
                      chk[next][cnt+1][nx][ny] = d+1
                      q.append((next, cnt+1, nx, ny, d+1))
+            elif now == 1:
+                 q.append((next, cnt, x, y, d+1))
 
 print(-1 if answer == MAX else answer)
