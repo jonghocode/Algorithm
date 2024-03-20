@@ -1,31 +1,44 @@
-# 1967 트리의 지름
-# 끝까지 갔다가 왼쪽, 오른쪽 중 큰놈을 올린다.
-# 왼쪽 오른쪽을 더한 값을 정답으로 계속 최신화 한다.
-import sys
-input = sys.stdin.readline
+# 1043(거짓말)
 
-def dfs(now, sum):
-    global answer
-    temp = []
-    for e, w in graph[now]:
-        k = dfs(e, w)
-        temp.append(k)
-        visit[now] = max(visit[now], k)
+def find(idx):
+    if idx == root[idx]:
+        return root[idx]
+    root[idx] = find(root[idx])
+    return root[idx]
 
-    temp.sort()
-    if len(temp) >= 2:
-        answer = max(answer, temp[-1] + temp[-2])
-    elif len(temp) == 1:
-        answer = max(answer, temp[-1])
-    return visit[now] + sum
+n, m = map(int, input().split())
+lie = list(map(int, input().split()))
+lie = lie[1:]
+party = [list(map(int, input().split())) for _ in range(m)]
 
-n = int(input())
+root = [i for i in range(n+1)]
+for i in range(len(lie)-1):
+    n1, n2 = find(lie[i]), find(lie[i+1])
+    if n1 != n2:
+        root[n2] = n1
+
+for temp in party:
+    temp = temp[1:]
+    for i in range(len(temp)-1):
+        n1, n2 = find(temp[i]), find(temp[i+1])
+        if n1 != n2:
+            root[n2] = n1
+k = -1
+if len(lie) >= 1:
+    k = lie[0]
+
 answer = 0
-graph = {i : [] for i in range(1, n+1)}
-for _ in range(n-1):
-    a, b, c = map(int, input().split())
-    graph[a].append((b, c))
-
-visit = [0 for _ in range(n+1)]
-dfs(1, 0)
-print(answer)
+if k == -1:
+    print(m)
+else:
+    for temp in party:
+        temp = temp[1:]
+        sw = 0
+        for i in range(len(temp)):
+            if find(k) == find(temp[i]):
+                sw = 1
+                break
+        if sw == 0:
+            answer += 1
+    
+    print(answer)
