@@ -1,51 +1,37 @@
-import java.util.ArrayDeque;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Queue;
+# 백준 1162(도로포장)
+from heapq import heappush, heappop
+import sys
+input = sys.stdin.readline
+MAX = int(1e12)
 
-public class Main {
-    public static void main(String[] args)  {
-        int key = 0, now = 0, watingTime = 0;
+n, m, k = map(int, input().split())
+graph = {i : [] for i in range(1, n+1)}
+cost = [[MAX for _ in range(n+1)] for _ in range(k+1)]
+cost[0][1] = 0
 
-        Object[] list = new Object[4];
-        list[0] = event("A", 20, 5);
-        list[1] = event("B", 22, 4);
-        list[2] = event("C", 23, 2);
-        list[3] = event("D", 30, 3);
+for _ in range(m):
+    a, b, c = map(int, input().split())
+    graph[a].append((b, c))
+    graph[b].append((a, c))
 
-        Queue<Object> queue = new ArrayDeque<>();
-        queue.add(list[0]);
-        while (!queue.isEmpty()) {
-            Map<String, Object> temp = (Map<String, Object>)queue.remove();
-            String who = temp.get("customer").toString();
-            int st = Integer.parseInt(temp.get("start").toString());
-            int time = Integer.parseInt(temp.get("time").toString());
+q = []
+heappush(q, (0, 1, 0))
 
-            if (now >= st && key < 3) { // 도착 시간이 되었으니 큐에 넣기
-                queue.add(list[++key]);
-            }
-            else if(now < st){
-                queue.add(list[key]);
-            }
+while q:
+    d, now, cnt = heappop(q)
 
-            if (now >= st) {
-                System.out.println("손님 : " + who + ", 도착시간 : " + st + ", " +
-                        "서비스 시작시간 : " + now + ", 서비스 완료 시간 : " + (now + time));
-                watingTime += now - st;
-                now += time;
-            } else {
-                now ++;
-            }
-        }
+    if cost[cnt][now] < d:
+        continue
+    
+    for e, w in graph[now]:
+        if cost[cnt][e] > d + w: # 포장 x
+            cost[cnt][e] = d + w
+            heappush(q, (d + w, e, cnt))
+        if k > cnt and cost[cnt+1][e] > d:
+            cost[cnt+1][e] = d
+            heappush(q, (d, e, cnt+1))
 
-        System.out.println("평균 대기 시간 : " + watingTime / 4);
-    }
-
-    static Map<String, Object> event(String customer, int endtime, int time) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("customer", customer);
-        map.put("start", endtime);
-        map.put("time", time);
-        return map;
-    }
-}
+answer = MAX
+for i in range(k+1):
+    answer = min(answer, cost[i][n])
+print(answer)
